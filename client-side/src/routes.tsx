@@ -1,22 +1,39 @@
 // src/routes.tsx
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
 import JobDetails from './pages/JobDetails';
-import Profile from './pages/Profile';
+import ProfilePage from './pages/ProfilePage';
 import Map from './pages/Map';
+import NotFound from './pages/NotFound';
+import JobList from './pages/JobList';
 
 const AppRoutes: React.FC = () => {
+    const router = createBrowserRouter([{
+        path: '/',
+        element: <Home />,
+        errorElement: <NotFound />,
+    },
+    {
+        path: '/profile/:userId',
+        element: <ProfilePage />,
+    },
+    {
+        path: '/job/:jobId',
+        element: <JobDetails />,
+    },
+    {
+        path: '/map',
+        element: <Map />,
+    },
+    {
+        path: '/jobs',
+        element: <JobList />,
+    }
+]);
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/job/:id" element={<JobDetails />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/map" element={<Map />} />
-            </Routes>
-        </Router>
+        <RouterProvider router={router}/>
     );
 };
 

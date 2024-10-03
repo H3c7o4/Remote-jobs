@@ -45,7 +45,7 @@ const Map: React.FC = () => {
 
       {position && (
         <Marker position={position} icon={customIcon}>
-          <Popup>Vous êtes ici !</Popup>
+          <Popup>Bonjour, je m'appelle Hector !</Popup>
         </Marker>
       )}
      </MapContainer>
