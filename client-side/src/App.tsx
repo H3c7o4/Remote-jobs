@@ -1,9 +1,13 @@
-const App = () => {
+// src/App.tsx
+import React from 'react';
+import JobList from './pages/JobList';
+
+const App: React.FC = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello World!
-    </h1>
-  )
-}
+    <div>
+      <JobList />
+    </div>
+  );
+};
 
 export default App;
