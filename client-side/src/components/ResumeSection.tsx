@@ -1,18 +1,19 @@
+// ProfileCV.tsx
 import React from 'react';
+import { FaFileDownload } from 'react-icons/fa';
 
-interface ResumeSectionProps {
-  resumeLink: string;
+interface ProfileCVProps {
+  cvLink: string;
 }
 
-const ResumeSection: React.FC<ResumeSectionProps> = ({ resumeLink }) => {
+export const ProfileCV: React.FC<ProfileCVProps> = ({ cvLink }) => {
   return (
-    <div className="my-4">
-      <h2 className="text-2xl font-semibold">Resume</h2>
-      <a href={resumeLink} download className="text-blue-500">
-        Download CV
+    <div className="my-10">
+      <h2 className="text-lg font-semibold">CV</h2>
+      <a href={cvLink} className="flex items-center text-blue-500 hover:text-blue-700" download>
+        <FaFileDownload className="mr-2" />
+        Download Resume
       </a>
     </div>
   );
 };
-
-export default ResumeSection;

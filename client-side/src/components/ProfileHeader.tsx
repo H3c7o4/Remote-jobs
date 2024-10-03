@@ -1,39 +1,24 @@
+// ProfileHeader.tsx
 import React from 'react';
 
 interface ProfileHeaderProps {
+  coverPhoto: string;
+  profilePhoto: string;
   name: string;
   profession: string;
-  onEditClick: () => void;
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, profession, onEditClick }) => {
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ coverPhoto, profilePhoto, name, profession }) => {
   return (
-    <div className="w-full relative">
-      {/* Cover Image */}
-      <img
-        src="https://images.unsplash.com/photo-1451187580459-43490279c0fa"
-        alt="User Cover"
-        className="w-full xl:h-[20rem]"
-      />
-      {/* Profile Image and Name */}
-      <div className="flex items-center space-x-4 mt-[-4rem]">
-        <img
-          src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea"
-          alt="User Profile"
-          className="rounded-md w-28 h-28 outline outline-2 outline-blue-500"
-        />
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">{name}</h1>
-          <p className="text-lg text-gray-500">{profession}</p>
-        </div>
-        {/* Edit Button */}
-        <button onClick={onEditClick} className="ml-auto flex items-center text-blue-600">
-          <span className="mr-2">Edit Profile</span>
-          <i className="fas fa-pen"></i>
-        </button>
+    <>
+      <img src={coverPhoto} alt="User Cover" className="w-full xl:h-[20rem] lg:h-[18rem] md:h-[16rem] sm:h-[14rem] xs:h-[11rem]" />
+      <div className="sm:w-[80%] xs:w-[90%] mx-auto flex">
+        <img src={profilePhoto} alt="User Profile" className="rounded-md lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[7rem] xs:h-[7rem] outline outline-2 outline-offset-2 outline-blue-500 relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]" />
+        <h1 className="w-full text-left my-4 sm:mx-4 xs:pl-4 text-gray-800 dark:text-white lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif">
+          {name}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">{profession}</p>
       </div>
-    </div>
+    </>
   );
 };
-
-export default ProfileHeader;
