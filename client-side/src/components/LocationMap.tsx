@@ -37,11 +37,11 @@ const LocationMap: React.FC<LocationMapProps> = ({ location, latitude, longitude
   }, [latitude, longitude, location]); // Ajoutez `location` comme dépendance
 
   return (
-    <div className="my-10 lg:w-[70%] md:h-[14rem] xs:w-full xs:h-[10rem]">
-      <h1 className="w-fit font-serif my-4 pb-1 pr-2 rounded-b-md border-b-4 border-blue-600 dark:border-b-4 dark:border-yellow-600 dark:text-white lg:text-4xl md:text-3xl xs:text-xl">
+    <div className="my-10 w-[90%] mx-auto"> {/* Modifié ici */}
+      <h1 className="text-left w-fit font-serif my-4 pb-1 pr-2 rounded-b-md border-b-4 border-blue-600 dark:border-b-4 dark:border-yellow-600 dark:text-white lg:text-4xl md:text-3xl xs:text-xl">
         My Location
       </h1>
-      <div id="map" className="h-64 w-full rounded-md" />
+      <div id="map" className="h-64 w-full rounded-lg" /> {/* Coins arrondis avec rounded-lg */}
     </div>
   );
 };
