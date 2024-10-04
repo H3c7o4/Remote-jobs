@@ -5,6 +5,7 @@ import { ProfileDetails } from '../components/ProfileDetails';
 import { ProfileCV } from '../components/ResumeSection';
 import LocationMap from '../components/LocationMap';
 import SocialLinks from '../components/SocialLinks';
+import Footer from '../components/Footer';
 
 const ProfilePage: React.FC = () => {
   // Données utilisateur initiales
@@ -112,9 +113,17 @@ const ProfilePage: React.FC = () => {
           onSkillEdit={handleSkillEdit} // Passe le callback pour éditer une compétence
           onPersonalInfoEdit={handlePersonalInfoEdit} // Passe le callback pour éditer les informations personnelles
         />
-        <LocationMap location="Addis Ababa, Ethiopia" latitude={8.9635} longitude={38.6133} />
-        <ProfileCV cvLink={userData.cvLink} />
         <SocialLinks />
+      </div>
+      <div className='ps-14 pb-10 lg:ps-44'>
+      <ProfileCV initialCvLink={userData.cvLink} />
+      </div>
+      <div>
+      <LocationMap location="Addis Ababa, Ethiopia" latitude={8.9635} longitude={38.6133} />
+      </div>
+      
+      <div>
+      <Footer />
       </div>
     </section>
   );
