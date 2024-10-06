@@ -14,7 +14,7 @@ import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
 
 const AppRoutes: React.FC = () => {
-    const isAuthenticated = false; // Remplacez ceci par votre logique d'authentification
+    const isAuthenticated = true; // Remplacez ceci par votre logique d'authentification
 
     const router = createBrowserRouter([
         {
