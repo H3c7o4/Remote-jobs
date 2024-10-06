@@ -18,7 +18,7 @@ const SignUp: React.FC = () => {
   return (
     <div>
         <AuthFormContainer
-      title="Sign Up"
+      title="Create an Account"
       footerText="Already have an account?"
       footerLink="/signin"
       footerLinkText="Sign In"
