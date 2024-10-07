@@ -1,18 +1,50 @@
-from djoser.serializers import UserCreateSerializer, UserSerializer
-from .models import User
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer, UserSerializer as BaseUserSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.exceptions import ValidationError
+from django.contrib.auth import get_user_model
 
-class CustomUserCreateSerializer(UserCreateSerializer):
-    class Meta(UserCreateSerializer.Meta):
-        model = User
-        fields = ['id', 'username', 'password', 'email', 'first_name', 'last_name',
-                  'is_candidate', 'is_company', 'profession', 'city', 'country', 
-                  'profile_picture', 'cv', 'company_name', 'company_description', 
-                  'company_website', 'company_logo']
+user = get_user_model()
 
-class CustomUserSerializer(UserSerializer):
-    class Meta(UserSerializer.Meta):
-        model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 
-                  'is_candidate', 'is_company', 'profession', 'city', 'country',
-                  'profile_picture', 'cv', 'company_name', 'company_description',
-                  'company_website', 'company_logo']
+class UserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        fields = ('id', 'email', 'first_name', 'last_name', 'password')
+
+    def create(self, validated_data):
+        return super().create(validated_data)
+
+class UserSerializer(BaseUserSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        fields = ['id', 'first_name', 'last_name', 'email', 'is_active', 'is_deactivated']
+
+    def validate(self, attrs):
+        validated_attr = super().validate(attrs)
+        email = validated_attr.get('email')  # Correction ici
+
+        try:
+            user = user.objects.get(email=email)  # Correction ici
+        except user.DoesNotExist:
+            raise ValidationError('User not found.')
+
+        if user.is_deactivated:
+            raise ValidationError('Account deactivated.')
+
+        if not user.is_active:
+            raise ValidationError('Account not activated.')
+
+        return validated_attr
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        obj = self.user
+        data.update({
+            'id': obj.id,
+            'first_name': obj.first_name,
+            'last_name': obj.last_name,
+            'email': obj.email,
+            'is_active': obj.is_active,
+            'is_deactivated': obj.is_deactivated,
+        })
+
+        return data
