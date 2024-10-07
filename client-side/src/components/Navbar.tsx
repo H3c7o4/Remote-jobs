@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
                   Account
                 </Link>
                 <Link
-                  to="/logout"
+                  to="/signin"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                 >
                   Logout <FaSignOutAlt className="ml-2" />

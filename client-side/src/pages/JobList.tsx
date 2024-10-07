@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
-import Map from './Map';
+import Map from '../components/Map';
 import Footer from '../components/Footer';
 
 const JobList: React.FC = () => {
