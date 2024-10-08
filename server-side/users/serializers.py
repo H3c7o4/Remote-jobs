@@ -14,7 +14,12 @@ class UserCreateSerializer(BaseUserCreateSerializer):
 
 class UserSerializer(BaseUserSerializer):
     class Meta(BaseUserCreateSerializer.Meta):
-        fields = ['id', 'first_name', 'last_name', 'email', 'is_active', 'is_deactivated']
+        # Ajoute tous les champs que tu souhaites inclure dans l'API
+        fields = [
+            'id', 'email', 'first_name', 'last_name', 'is_active', 'is_deactivated', 'is_superuser',
+            'is_staff', 'updated_at', 'cover_image', 'profile_pic', 'profession', 'bio', 'phone_number',
+            'website', 'created_at', 'skills', 'resume', 'location', 'last_login'
+        ]
 
     def validate(self, attrs):
         validated_attr = super().validate(attrs)
