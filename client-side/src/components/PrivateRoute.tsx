@@ -1,15 +1,19 @@
-// src/components/PrivateRoute.tsx
-
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 interface PrivateRouteProps {
-    element: JSX.Element;
-    isAuthenticated: boolean; // Propriété pour vérifier l'authentification
+  element: React.ReactElement;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ element, isAuthenticated }) => {
-    return isAuthenticated ? element : <Navigate to="/signin" />;
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return isAuthenticated ? element : <Navigate to="/signin" />;
 };
 
 export default PrivateRoute;

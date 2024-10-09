@@ -173,7 +173,7 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
-    "http://localhost:3000",
+    "http://localhost:5173",
 ]
 
 DJOSER = {
@@ -183,7 +183,7 @@ DJOSER = {
         'user': 'users.serializers.UserSerializer',
     },
     'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'auth/activate/?uid={uid}&token={token}',
+    'ACTIVATION_URL': 'http://localhost:5173/auth/activate/?uid={uid}&token={token}',
     'PASSWORD_RESET_CONFIRM_URL': 'auth/reset-password/?uid={uid}&token={token}',
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True
 }

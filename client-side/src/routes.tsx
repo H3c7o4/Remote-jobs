@@ -1,5 +1,3 @@
-// src/routes.tsx
-
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProfilePage from './pages/ProfilePage';
@@ -12,10 +10,10 @@ import JobOfferDetails from './pages/JobOfferDetails';
 import SavedJobs from './pages/SavedJobs';
 import LandingPage from './pages/LandingPage';
 import PrivateRoute from './components/PrivateRoute';
+import AccountActivation from './pages/AccountActivation';
+import SignUpSuccess from './pages/SignUpSuccess';
 
 const AppRoutes: React.FC = () => {
-    const isAuthenticated = true; // Remplacez ceci par votre logique d'authentification
-
     const router = createBrowserRouter([
         {
             path: '/',
@@ -32,29 +30,35 @@ const AppRoutes: React.FC = () => {
         },
         {
             path: '/profile/:userId',
-            element: <PrivateRoute element={<ProfilePage />} isAuthenticated={isAuthenticated} />,
+            element: <PrivateRoute element={<ProfilePage />} />,
         },
         {
             path: '/jobs/:jobId',
-            element: <PrivateRoute element={<JobOfferDetails />} isAuthenticated={isAuthenticated} />,
+            element: <PrivateRoute element={<JobOfferDetails />} />,
         },
         {
             path: '/map',
-            element: <PrivateRoute element={<Map />} isAuthenticated={isAuthenticated} />,
+            element: <PrivateRoute element={<Map />} />,
         },
         {
             path: '/jobs',
-            element: <PrivateRoute element={<JobList />} isAuthenticated={isAuthenticated} />,
+            element: <PrivateRoute element={<JobList />} />,
         },
         {
             path: '/saved-jobs',
-            element: <PrivateRoute element={<SavedJobs />} isAuthenticated={isAuthenticated} />,
+            element: <PrivateRoute element={<SavedJobs />} />,
+        },
+        {
+            path: '/auth/activate/:uid/:token',
+            element: <AccountActivation />,
+        },
+        {
+            path: '/signup-success',
+            element: <SignUpSuccess />,
         },
     ]);
 
-    return (
-        <RouterProvider router={router}/>
-    );
+    return <RouterProvider router={router} />;
 };
 
 export default AppRoutes;

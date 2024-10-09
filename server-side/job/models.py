@@ -30,4 +30,4 @@ class LikedJob(models.Model):
     date_posted = models.DateTimeField()
 
     def __str__(self):
-        return f"{self.role} - {self.company_name} liked by {self.user.username}"
+        return f"{self.role} - {self.company_name} liked by {self.user.first_name}"
