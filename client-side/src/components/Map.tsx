@@ -11,7 +11,7 @@ interface Job {
     role: string;
     company_name: string;
     location: string;
-    logo: string;
+    logo: string | null; // Le logo peut être null
 }
 
 const createCustomMarker = (imageUrl: string) => {
@@ -88,21 +88,24 @@ const Map: React.FC = () => {
                     <Marker position={position} icon={L.divIcon({ className: 'custom-marker', html: createCustomMarker(imageUrl) })}>
                         <Popup>Hello, my name is {user?.first_name}</Popup>
                     </Marker>
-                    {jobs.map(job => (
-                        // Ajout de marqueurs pour chaque job
-                        <Marker
-                            key={job.id}
-                            position={[position[0] + (Math.random() - 0.5) * 0.1, position[1] + (Math.random() - 0.5) * 0.1]} // Éparpiller les offres autour de l'utilisateur
-                            icon={L.divIcon({ className: 'custom-marker', html: createCustomMarker('https://www.clipartmax.com/png/middle/283-2833048_small-business-logo-icon-company-name-icon.png') })} 
-                        >
-                            <Popup>
-                                <Link to={`/jobs/${job.id}`}>
-                                    {job.role} at {job.company_name} <br />
-                                    Location: {job.location}
-                                </Link>
-                            </Popup>
-                        </Marker>
-                    ))}
+                    {jobs.map(job => {
+                        // Utilisation du logo de l'entreprise ou d'une URL par défaut
+                        const logoUrl = job?.logo || 'https://www.clipartmax.com/png/middle/283-2833048_small-business-logo-icon-company-name-icon.png';
+                        return (
+                            <Marker
+                                key={job.id}
+                                position={[position[0] + (Math.random() - 0.5) * 0.1, position[1] + (Math.random() - 0.5) * 0.1]} // Éparpiller les offres autour de l'utilisateur
+                                icon={L.divIcon({ className: 'custom-marker', html: createCustomMarker(logoUrl) })} 
+                            >
+                                <Popup>
+                                    <Link to={`/jobs/${job.id}`}>
+                                        {job.role} at {job.company_name} <br />
+                                        Location: {job.location}
+                                    </Link>
+                                </Popup>
+                            </Marker>
+                        );
+                    })}
                     <MapView position={position} />
                 </>
             )}
