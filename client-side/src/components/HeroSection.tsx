@@ -26,7 +26,7 @@ const HeroSection: React.FC = () => {
           <img
             className="object-cover object-center rounded"
             alt="hero"
-            src="https://dummyimage.com/720x600/edf2f7/a5afbd"
+            src="https://bookdown.org/sammigachuhi/book-leaflet/clutter-points.jpg"
           />
         </div>
       </div>
