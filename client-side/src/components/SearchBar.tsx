@@ -3,7 +3,7 @@ const SearchBar: React.FC = () => {
         <div className="bg-white shadow-md rounded-md p-4 flex flex-wrap justify-center space-x-2">
             <input
                 type="text"
-                placeholder="Position"
+                placeholder="Job Position"
                 className="border border-gray-300 rounded-md p-2 w-full md:w-auto md:min-w-[150px]" // Responsive
             />
             <input

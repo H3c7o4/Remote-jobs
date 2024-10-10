@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
           {/* Logo (fixé près du bord gauche) */}
           <div className="flex-shrink-0 pl-4">
             <Link to="/" className="text-2xl font-bold text-gray-800">
-              Remotely
+              Remotivity
             </Link>
           </div>
 
