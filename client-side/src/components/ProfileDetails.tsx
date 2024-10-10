@@ -1,15 +1,6 @@
 // ProfileDetails.tsx
 import { FaPen, FaPlus } from 'react-icons/fa'; // Importation des icônes de crayon et plus
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  bio: string;
-  phoneNumber: string;
-  email: string;
-  website: string;
-  skills: string[]; // Ajout du tableau de compétences
-}
+import { UserData } from '../types/user';
 
 interface ProfileDetailsProps {
   userData: UserData;
@@ -19,7 +10,16 @@ interface ProfileDetailsProps {
   onPersonalInfoEdit: () => void; // Fonction de modification des informations personnelles
 }
 
-export const ProfileDetails: React.FC<ProfileDetailsProps> = ({ userData, onBioEdit, onSkillAdd, onSkillEdit, onPersonalInfoEdit }) => {
+export const ProfileDetails: React.FC<ProfileDetailsProps> = ({
+  userData,
+  onBioEdit,
+  onSkillAdd,
+  onSkillEdit,
+  onPersonalInfoEdit
+}) => {
+  // Diviser les compétences en un tableau
+  const skillsArray = userData.skills.split(',').map(skill => skill.trim());
+
   return (
     <div className="my-10 w-full">
       {/* Section Bio */}
@@ -44,15 +44,15 @@ export const ProfileDetails: React.FC<ProfileDetailsProps> = ({ userData, onBioE
             <dl className="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
               <div className="flex flex-col pb-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">First Name</dt>
-                <dd className="text-lg font-semibold">{userData.firstName}</dd>
+                <dd className="text-lg font-semibold">{userData.first_name}</dd>
               </div>
               <div className="flex flex-col py-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Last Name</dt>
-                <dd className="text-lg font-semibold">{userData.lastName}</dd>
+                <dd className="text-lg font-semibold">{userData.last_name}</dd>
               </div>
               <div className="flex flex-col py-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Phone Number</dt>
-                <dd className="text-lg font-semibold">{userData.phoneNumber}</dd>
+                <dd className="text-lg font-semibold">{userData.phone_number}</dd>
               </div>
               <div className="flex flex-col py-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email</dt>
@@ -77,7 +77,7 @@ export const ProfileDetails: React.FC<ProfileDetailsProps> = ({ userData, onBioE
         </button>
       </div>
       <ul className="list-disc pl-5">
-        {userData.skills.map((skill, index) => (
+        {skillsArray.map((skill, index) => (
           <li key={index} className="flex items-center justify-between text-gray-700 dark:text-gray-400 mb-2">
             {skill}
             <button onClick={() => onSkillEdit(index)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">

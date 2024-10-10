@@ -49,7 +49,7 @@ const AppRoutes: React.FC = () => {
             element: <PrivateRoute element={<SavedJobs />} />,
         },
         {
-            path: '/auth/activate/:uid/:token',
+            path: '/auth/activate/',
             element: <AccountActivation />,
         },
         {

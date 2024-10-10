@@ -1,129 +1,188 @@
-// Profile.tsx
-import React, { useState } from 'react';
+// ProfilePage.tsx
+import React, { useState, useEffect } from 'react';
 import { ProfileHeader } from '../components/ProfileHeader';
 import { ProfileDetails } from '../components/ProfileDetails';
 import { ProfileCV } from '../components/ResumeSection';
 import LocationMap from '../components/LocationMap';
 import SocialLinks from '../components/SocialLinks';
 import Footer from '../components/Footer';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import { UserData } from '../types/user';
 
+// Définition de l'interface pour les données utilisateur
 const ProfilePage: React.FC = () => {
-  // Données utilisateur initiales
-  const initialUserData = {
-    coverPhoto: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw5fHxjb3ZlcnxlbnwwfDB8fHwxNzEwNzQxNzY0fDA&ixlib=rb-4.0.3&q=80&w=1080',
-    profilePhoto: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw3fHxwZW9wbGV8ZW58MHwwfHx8MTcxMTExMTM4N3ww&ixlib=rb-4.0.3&q=80&w=1080',
-    firstName: 'Samuel',
-    lastName: 'Abera',
-    profession: 'Développeur Full Stack',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-    location: 'Ethiopia, Addis Ababa',
-    phoneNumber: '+251913****30',
-    email: 'samuelabera87@gmail.com',
-    website: 'https://techakim.com',
-    skills: ['JavaScript', 'React', 'Node.js'], // Compétences initiales
-    cvLink: '#', // Lien vers le CV
-  };
-
-  // États pour les données utilisateur, photo de couverture et de profil
-  const [userData, setUserData] = useState(initialUserData);
-  const [coverPhoto, setCoverPhoto] = useState(userData.coverPhoto);
-  const [profilePhoto, setProfilePhoto] = useState(userData.profilePhoto);
-  const [profession, setProfession] = useState(userData.profession);
+  const { user, isAuthenticated } = useAuth();
   
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [coverPhoto, setCoverPhoto] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState('');
+  const [profession, setProfession] = useState('');
+
+  // Charger les données de l'utilisateur lorsque l'utilisateur est authentifié
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (isAuthenticated && user) {
+        try {
+          const response = await api.get(`/users/auth/users/me/`);
+          setUserData(response.data);
+          setCoverPhoto(response.data.cover_image);
+          setProfilePhoto(response.data.profile_pic);
+          setProfession(response.data.profession);
+        } catch (error) {
+          console.error('Failed to fetch user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [isAuthenticated, user]);
+
   // Fonction pour gérer le changement de la photo de couverture
-  const handleCoverPhotoChange = (file: File) => {
+  const handleCoverPhotoChange = async (file: File) => {
     const coverPhotoUrl = URL.createObjectURL(file);
-    setCoverPhoto(coverPhotoUrl); // Mise à jour de la photo de couverture
+    setCoverPhoto(coverPhotoUrl);
+
+    // Envoi de la photo à l'API
+    if (userData) {
+      const formData = new FormData();
+      formData.append('email', userData.email);
+      formData.append('first_name', userData.first_name);
+      formData.append('last_name', userData.last_name);
+      formData.append('cover_image', file);
+      await api.patch(`/users/auth/users/me/`, formData);
+    }
   };
 
   // Fonction pour gérer le changement de la photo de profil
-  const handleProfilePhotoChange = (file: File) => {
+  const handleProfilePhotoChange = async (file: File) => {
     const profilePhotoUrl = URL.createObjectURL(file);
-    setProfilePhoto(profilePhotoUrl); // Mise à jour de la photo de profil
+    setProfilePhoto(profilePhotoUrl);
+
+    // Envoi de la photo à l'API
+    if (userData) {
+      const formData = new FormData();
+      formData.append('email', userData.email);
+      formData.append('first_name', userData.first_name);
+      formData.append('last_name', userData.last_name);
+      formData.append('profile_pic', file);
+      await api.patch(`/users/auth/users/me/`, formData);
+    }
   };
 
   // Fonction pour éditer la bio
-  const handleBioEdit = () => {
-    const newBio = prompt('Edit your bio:', userData.bio); // Demande à l'utilisateur de modifier la bio
-    if (newBio !== null) {
-      setUserData({ ...userData, bio: newBio }); // Mise à jour de la bio
+  const handleBioEdit = async () => {
+    if (userData) {
+      const newBio = prompt('Edit your bio:', userData.bio);
+      if (newBio !== null) {
+        setUserData({ ...userData, bio: newBio });
+        // Envoi de la photo à l'API
+        const formData = new FormData();
+        formData.append('email', userData.email);
+        formData.append('first_name', userData.first_name);
+        formData.append('last_name', userData.last_name);
+        formData.append('bio', newBio);
+        await api.patch(`/users/auth/users/me/`, formData);
+      }
     }
   };
 
   // Fonction pour ajouter une compétence
-  const handleSkillAdd = () => {
-    const newSkill = prompt('Add a new skill:'); // Demande à l'utilisateur d'ajouter une compétence
-    if (newSkill) {
-      setUserData({ ...userData, skills: [...userData.skills, newSkill] }); // Ajout de la nouvelle compétence
+  const handleSkillAdd = async () => {
+    if (userData) {
+      const newSkill = prompt('Add a new skill:');
+      if (newSkill) {
+        const updatedSkills = userData.skills ? `${userData.skills}, ${newSkill}` : newSkill;
+        setUserData({ ...userData, skills: updatedSkills });
+        await api.patch(`/users/auth/users/me/`, { ...userData, skills: updatedSkills });
+      }
     }
   };
 
   // Fonction pour modifier une compétence existante
-  const handleSkillEdit = (index: number) => {
-    const updatedSkill = prompt('Edit skill:', userData.skills[index]); // Demande à l'utilisateur de modifier la compétence
-    if (updatedSkill !== null) {
-      const updatedSkills = [...userData.skills];
-      updatedSkills[index] = updatedSkill;
-      setUserData({ ...userData, skills: updatedSkills }); // Mise à jour de la compétence
+  const handleSkillEdit = async (index: number) => {
+    if (userData) {
+      const skillsArray = userData.skills.split(',').map(skill => skill.trim());
+      const updatedSkill = prompt('Edit skill:', skillsArray[index]);
+      if (updatedSkill !== null) {
+        skillsArray[index] = updatedSkill;
+        const updatedSkills = skillsArray.join(', ');
+        setUserData({ ...userData, skills: updatedSkills });
+        await api.patch(`/users/auth/users/me/`, { ...userData, skills: updatedSkills });
+      }
     }
   };
 
   // Fonction pour éditer les informations personnelles
-  const handlePersonalInfoEdit = () => {
-    const newFirstName = prompt('Edit First Name:', userData.firstName); // Demande à l'utilisateur de modifier le prénom
-    const newLastName = prompt('Edit Last Name:', userData.lastName); // Demande à l'utilisateur de modifier le nom
-    const newPhoneNumber = prompt('Edit Phone Number:', userData.phoneNumber); // Demande à l'utilisateur de modifier le numéro de téléphone
-    const newEmail = prompt('Edit Email:', userData.email); // Demande à l'utilisateur de modifier l'email
-    const newWebsite = prompt('Edit Website:', userData.website); // Demande à l'utilisateur de modifier le site web
+  const handlePersonalInfoEdit = async () => {
+    if (userData) {
+      const newFirstName = prompt('Edit First Name:', userData.first_name);
+      const newLastName = prompt('Edit Last Name:', userData.last_name);
+      const newPhoneNumber = prompt('Edit Phone Number:', userData.phone_number);
+      const newEmail = prompt('Edit Email:', userData.email);
+      const newWebsite = prompt('Edit Website:', userData.website);
 
-    if (newFirstName && newLastName && newPhoneNumber && newEmail && newWebsite) {
-      setUserData({ 
-        ...userData, 
-        firstName: newFirstName, 
-        lastName: newLastName, 
-        phoneNumber: newPhoneNumber, 
-        email: newEmail, 
-        website: newWebsite 
-      }); // Mise à jour des informations personnelles
+      if (newFirstName && newLastName && newPhoneNumber && newEmail && newWebsite) {
+        const updatedData = { 
+          first_name: newFirstName, 
+          last_name: newLastName, 
+          phone_number: newPhoneNumber, 
+          email: newEmail, 
+          website: newWebsite 
+        };
+        setUserData({ ...userData, ...updatedData });
+        await api.patch(`/users/auth/users/me/`, updatedData);
+      }
     }
   };
 
   // Fonction pour gérer la modification de la profession
-  const handleProfessionChange = (newProfession: string) => {
-    setProfession(newProfession); // Mise à jour de la profession
-    setUserData({ ...userData, profession: newProfession });
+  const handleProfessionChange = async (newProfession: string) => {
+    setProfession(newProfession);
+    if (userData) {
+      setUserData({ ...userData, profession: newProfession });
+      await api.patch(`/users/auth/users/me/`, { profession: newProfession });
+    }
   };
+
+  if (!userData) return <div>Loading...</div>; // Ajout d'un état de chargement
 
   return (
     <section className="w-full overflow-hidden dark:bg-gray-900">
       <ProfileHeader
         coverPhoto={coverPhoto}
         profilePhoto={profilePhoto}
-        name={`${userData.firstName} ${userData.lastName}`}
+        name={`${userData.first_name} ${userData.last_name}`}
         profession={profession}
         onCoverPhotoChange={handleCoverPhotoChange}
         onProfilePhotoChange={handleProfilePhotoChange}
         onProfessionChange={handleProfessionChange}
       />
+      <div className="absolute top-4 left-4">
+        <a href="/jobs">
+          <img src="/path/to/back-icon.png" alt="Back to jobs" />
+        </a>
+      </div>
       <div className="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative lg:-top-8 md:-top-6 sm:-top-4 xs:-top-4">
         <ProfileDetails
-          userData={userData}
-          onBioEdit={handleBioEdit} // Passe le callback pour éditer la bio
-          onSkillAdd={handleSkillAdd} // Passe le callback pour ajouter une compétence
-          onSkillEdit={handleSkillEdit} // Passe le callback pour éditer une compétence
-          onPersonalInfoEdit={handlePersonalInfoEdit} // Passe le callback pour éditer les informations personnelles
+          userData={{
+            ...userData,
+          }}
+          onBioEdit={handleBioEdit}
+          onSkillAdd={handleSkillAdd}
+          onSkillEdit={handleSkillEdit}
+          onPersonalInfoEdit={handlePersonalInfoEdit}
         />
         <SocialLinks />
       </div>
       <div className='ps-14 pb-10 lg:ps-44'>
-      <ProfileCV initialCvLink={userData.cvLink} />
+        <ProfileCV initialCvLink={userData.resume} />
       </div>
       <div>
-      <LocationMap location="Addis Ababa, Ethiopia" latitude={8.9635} longitude={38.6133} />
+        <LocationMap location={userData.location} latitude={8.9635} longitude={38.6133} />
       </div>
-      
       <div>
-      <Footer />
+        <Footer />
       </div>
     </section>
   );
