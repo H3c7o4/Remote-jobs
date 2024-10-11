@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useAuth } from '../context/AuthContext';
-import api from '../services/api'; // Assurez-vous que le service API est importé
-import { Link } from 'react-router-dom'; // Importer Link pour la navigation
+import api from '../services/api';
+import { Link } from 'react-router-dom';
 
-// Type pour les offres d'emploi
 interface Job {
     id: string;
     role: string;
     company_name: string;
     location: string;
-    logo: string | null; // Le logo peut être null
+    logo: string | null;
 }
 
 const createCustomMarker = (imageUrl: string) => {
@@ -24,11 +23,22 @@ const createCustomMarker = (imageUrl: string) => {
     return markerDiv;
 };
 
-const Map: React.FC = () => {
+interface MapProps {
+    searchParams: {
+        position: string;
+        city: string;
+        country: string;
+    };
+}
+
+const Map: React.FC<MapProps> = ({ searchParams }) => {
     const { isAuthenticated, user } = useAuth();
     const [position, setPosition] = useState<[number, number] | null>(null);
     const [jobs, setJobs] = useState<Job[]>([]);
-    const imageUrl = user?.profile_pic || 'defaultImageUrl'; // Utiliser l'image de profil de l'utilisateur
+
+    const DefaultJobUrl = 'https://www.pngitem.com/pimgs/m/78-788231_icon-blue-company-icon-png-transparent-png.png';
+
+    const imageUrl = user?.profile_pic || 'defaultImageUrl';
 
     const MapView: React.FC<{ position: [number, number] | null }> = ({ position }) => {
         const map = useMap();
@@ -48,7 +58,7 @@ const Map: React.FC = () => {
                 (pos) => {
                     const { latitude, longitude } = pos.coords;
                     setPosition([latitude, longitude]);
-                    fetchJobs(); // Appeler fetchJobs avec la position actuelle
+                    fetchJobs(); // Appeler fetchJobs par défaut
                 },
                 (error) => {
                     console.error("Erreur lors de la récupération de la position", error);
@@ -62,6 +72,14 @@ const Map: React.FC = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (searchParams.position) {
+            fetchJobsWithParams();
+        } else {
+            fetchJobs(); // Appel de la requête GET par défaut
+        }
+    }, [searchParams]);
+
     const fetchJobs = async () => {
         try {
             const response = await api.get<Job[]>('/api/jobs/');
@@ -71,7 +89,25 @@ const Map: React.FC = () => {
         }
     };
 
-    if (!isAuthenticated) return null; // Ne pas afficher la carte si l'utilisateur n'est pas authentifié
+    const fetchJobsWithParams = async () => {
+        const { position, city, country } = searchParams;
+
+        if (!position) {
+            alert("Veuillez entrer le poste.");
+            return;
+        }
+
+        const location = city ? city : country; // Utiliser uniquement la ville ou le pays s'ils sont fournis
+
+        try {
+            const response = await api.get<Job[]>(`/api/jobs/?search=${position}&location=${location}`);
+            setJobs(response.data);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des jobs avec paramètres", error);
+        }
+    };
+
+    if (!isAuthenticated) return null;
 
     return (
         <MapContainer
@@ -89,12 +125,11 @@ const Map: React.FC = () => {
                         <Popup>Hello, my name is {user?.first_name}</Popup>
                     </Marker>
                     {jobs.map(job => {
-                        // Utilisation du logo de l'entreprise ou d'une URL par défaut
-                        const logoUrl = job?.logo || 'https://www.clipartmax.com/png/middle/283-2833048_small-business-logo-icon-company-name-icon.png';
+                        const logoUrl = job?.logo || DefaultJobUrl;
                         return (
                             <Marker
                                 key={job.id}
-                                position={[position[0] + (Math.random() - 0.5) * 0.1, position[1] + (Math.random() - 0.5) * 0.1]} // Éparpiller les offres autour de l'utilisateur
+                                position={[position[0] + (Math.random() - 0.5) * 0.1, position[1] + (Math.random() - 0.5) * 0.1]}
                                 icon={L.divIcon({ className: 'custom-marker', html: createCustomMarker(logoUrl) })} 
                             >
                                 <Popup>

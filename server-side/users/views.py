@@ -6,8 +6,22 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import viewsets
+from .serializers import UserSerializer, UserCreateSerializer
+
 
 User = get_user_model()
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserCreateSerializer
+        return UserSerializer
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

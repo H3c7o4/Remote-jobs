@@ -20,7 +20,7 @@ export interface UserData {
     first_name: string;
     last_name: string;
     bio: string;
-    skills: string; // Chaîne de caractères, les compétences séparées par des virgules
+    skills?: string; // Chaîne de caractères, les compétences séparées par des virgules
     profession: string;
     phone_number: string;
     website: string;

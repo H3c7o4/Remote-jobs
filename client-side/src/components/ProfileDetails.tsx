@@ -1,13 +1,12 @@
-// ProfileDetails.tsx
-import { FaPen, FaPlus } from 'react-icons/fa'; // Importation des icônes de crayon et plus
+import { FaPen, FaPlus } from 'react-icons/fa';
 import { UserData } from '../types/user';
 
 interface ProfileDetailsProps {
   userData: UserData;
-  onBioEdit: () => void; // Fonction de modification de la bio
-  onSkillAdd: () => void; // Fonction pour ajouter une compétence
-  onSkillEdit: (index: number) => void; // Fonction de modification d'une compétence
-  onPersonalInfoEdit: () => void; // Fonction de modification des informations personnelles
+  onBioEdit: () => void;
+  onSkillAdd: () => void;
+  onSkillEdit: (index: number) => void;
+  onPersonalInfoEdit: () => void;
 }
 
 export const ProfileDetails: React.FC<ProfileDetailsProps> = ({
@@ -17,8 +16,8 @@ export const ProfileDetails: React.FC<ProfileDetailsProps> = ({
   onSkillEdit,
   onPersonalInfoEdit
 }) => {
-  // Diviser les compétences en un tableau
-  const skillsArray = userData.skills.split(',').map(skill => skill.trim());
+  // Gestion sécurisée des skills avec une valeur par défaut
+  const skillsArray = userData.skills?.split(',').map(skill => skill.trim()).filter(Boolean) || [];
 
   return (
     <div className="my-10 w-full">
@@ -29,7 +28,9 @@ export const ProfileDetails: React.FC<ProfileDetailsProps> = ({
           <FaPen className="text-gray-600 dark:text-gray-400" />
         </button>
       </div>
-      <p className="text-gray-700 dark:text-gray-400 text-md mb-6">{userData.bio}</p>
+      <p className="text-gray-700 dark:text-gray-400 text-md mb-6">
+        {userData.bio || 'No bio available. Click the edit button to add one.'}
+      </p>
 
       {/* Section Détails personnels */}
       <div className="my-8">
@@ -44,24 +45,30 @@ export const ProfileDetails: React.FC<ProfileDetailsProps> = ({
             <dl className="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
               <div className="flex flex-col pb-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">First Name</dt>
-                <dd className="text-lg font-semibold">{userData.first_name}</dd>
+                <dd className="text-lg font-semibold">{userData.first_name || 'Not specified'}</dd>
               </div>
               <div className="flex flex-col py-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Last Name</dt>
-                <dd className="text-lg font-semibold">{userData.last_name}</dd>
+                <dd className="text-lg font-semibold">{userData.last_name || 'Not specified'}</dd>
               </div>
               <div className="flex flex-col py-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Phone Number</dt>
-                <dd className="text-lg font-semibold">{userData.phone_number}</dd>
+                <dd className="text-lg font-semibold">{userData.phone_number || 'Not specified'}</dd>
               </div>
               <div className="flex flex-col py-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Email</dt>
-                <dd className="text-lg font-semibold">{userData.email}</dd>
+                <dd className="text-lg font-semibold">{userData.email || 'Not specified'}</dd>
               </div>
               <div className="flex flex-col pt-3">
                 <dt className="mb-1 text-gray-500 md:text-lg dark:text-gray-400">Website</dt>
                 <dd className="text-lg font-semibold hover:text-blue-500">
-                  <a href={userData.website} target="_blank" rel="noopener noreferrer">{userData.website}</a>
+                  {userData.website ? (
+                    <a href={userData.website} target="_blank" rel="noopener noreferrer">
+                      {userData.website}
+                    </a>
+                  ) : (
+                    'Not specified'
+                  )}
                 </dd>
               </div>
             </dl>
@@ -76,16 +83,25 @@ export const ProfileDetails: React.FC<ProfileDetailsProps> = ({
           <FaPlus className="text-gray-600 dark:text-gray-400" />
         </button>
       </div>
-      <ul className="list-disc pl-5">
-        {skillsArray.map((skill, index) => (
-          <li key={index} className="flex items-center justify-between text-gray-700 dark:text-gray-400 mb-2">
-            {skill}
-            <button onClick={() => onSkillEdit(index)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
-              <FaPen className="text-gray-600 dark:text-gray-400" />
-            </button>
-          </li>
-        ))}
-      </ul>
+      {skillsArray.length > 0 ? (
+        <ul className="list-disc pl-5">
+          {skillsArray.map((skill, index) => (
+            <li key={index} className="flex items-center justify-between text-gray-700 dark:text-gray-400 mb-2">
+              {skill}
+              <button 
+                onClick={() => onSkillEdit(index)} 
+                className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full"
+              >
+                <FaPen className="text-gray-600 dark:text-gray-400" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-gray-500 dark:text-gray-400 italic">
+          No skills added yet. Click the plus button to add your first skill.
+        </p>
+      )}
     </div>
   );
 };

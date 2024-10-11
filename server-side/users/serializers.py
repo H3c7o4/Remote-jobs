@@ -7,13 +7,21 @@ from django.contrib.auth import get_user_model
 user = get_user_model()
 
 class UserCreateSerializer(BaseUserCreateSerializer):
+    profile_pic = serializers.ImageField(required=False, allow_null=True)
+    cover_image = serializers.ImageField(required=False, allow_null=True)
+    resume = serializers.FileField(required=False, allow_null=True)
+
     class Meta(BaseUserCreateSerializer.Meta):
-        fields = ('id', 'email', 'first_name', 'last_name', 'password')
+        fields = ('id', 'email', 'first_name', 'last_name', 'password', 'profile_pic', 'cover_image', 'resume')
 
     def create(self, validated_data):
         return super().create(validated_data)
 
 class UserSerializer(BaseUserSerializer):
+    profile_pic = serializers.ImageField(required=False, allow_null=True)
+    cover_image = serializers.ImageField(required=False, allow_null=True)
+    resume = serializers.FileField(required=False, allow_null=True)
+
     # Ajoutez les SerializerMethodFields pour les URLs complètes
     profile_pic_url = serializers.SerializerMethodField()
     cover_image_url = serializers.SerializerMethodField()

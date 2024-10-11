@@ -1,7 +1,8 @@
 // src/services/axios.ts
 import axios from 'axios';
+// 'https://remote-jobs-k0hp.onrender.com' 'http://localhost:8000'
 
-const APIURL = 'http://127.0.0.1:8000';
+const APIURL = 'https://remote-jobs-k0hp.onrender.com';
 
 const api = axios.create({
   baseURL: APIURL,
