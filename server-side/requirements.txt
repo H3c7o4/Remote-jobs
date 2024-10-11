@@ -1,5 +1,8 @@
-django
-djoser
+django==4.2.13
+djoser==2.2.3
 django-cors-headers
 python-decouple
-drf-yasg
+drf-yasg==1.21.7
+djangorestframework==3.15.2
+Pillow
+requests
