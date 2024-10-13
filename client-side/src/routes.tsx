@@ -37,10 +37,6 @@ const AppRoutes: React.FC = () => {
             element: <PrivateRoute element={<JobOfferDetails />} />,
         },
         {
-            path: '/map',
-            element: <PrivateRoute element={<Map />} />,
-        },
-        {
             path: '/jobs',
             element: <PrivateRoute element={<JobList />} />,
         },
