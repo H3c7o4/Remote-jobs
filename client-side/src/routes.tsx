@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouterProvider, createBrowserRouter, createHashRouter } from 'react-router-dom';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
 import ProfilePage from './pages/ProfilePage';
 import NotFound from './pages/NotFound';
 import JobList from './pages/JobList';
