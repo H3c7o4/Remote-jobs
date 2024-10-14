@@ -181,7 +181,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:5173",
     "https://remotively.netlify.app",
-    "remotivity-bp7xvr4rl-h3c7o4s-projects.vercel.app",
+    "https://remotivity-bp7xvr4rl-h3c7o4s-projects.vercel.app",
 ]
 
 DJOSER = {
