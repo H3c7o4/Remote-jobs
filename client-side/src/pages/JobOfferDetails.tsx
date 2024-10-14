@@ -61,13 +61,15 @@ const JobOfferDetails: React.FC = () => {
   };
 
   // Si l'utilisateur est en cours de chargement ou non authentifié
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  
 
   // Si aucune donnée n'est trouvée pour ce job
-  if (!jobDetails) {
-    return <div>Job Offer Not found</div>;
+  if (!jobDetails || !isAuthenticated) {
+    if (loading) {
+      return <div>Job Offer Not found</div>;
+    }
+    return <div>Loading...</div>;
+    
   }
 
   return (
