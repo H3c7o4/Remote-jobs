@@ -10,17 +10,17 @@ const SignUpSuccess: React.FC = () => {
         <div className="w-full lg:w-1/2">
           <img
             className="hidden lg:block"
-            src="https://i.ibb.co/Ss0r1xT/signup-success-lg.png" 
+            src="https://theraise.eu/wp-content/uploads/2023/12/success.jpg" 
             alt="Sign Up Success"
           />
           <img
             className="hidden md:block lg:hidden"
-            src="https://i.ibb.co/ZVPXwtP/signup-success-md.png"
+            src="https://theraise.eu/wp-content/uploads/2023/12/success.jpg"
             alt="Sign Up Success"
           />
           <img
             className="md:hidden"
-            src="https://i.ibb.co/xsH9M2C/signup-success-sm.png"
+            src="https://theraise.eu/wp-content/uploads/2023/12/success.jpg"
             alt="Sign Up Success"
           />
         </div>
