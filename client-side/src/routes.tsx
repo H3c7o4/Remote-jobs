@@ -1,5 +1,5 @@
 import React from 'react';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter, createHashRouter } from 'react-router-dom';
 import ProfilePage from './pages/ProfilePage';
 import NotFound from './pages/NotFound';
 import JobList from './pages/JobList';
@@ -13,7 +13,7 @@ import AccountActivation from './pages/AccountActivation';
 import SignUpSuccess from './pages/SignUpSuccess';
 
 const AppRoutes: React.FC = () => {
-    const router = createBrowserRouter([
+    const router = createHashRouter([
         {
             path: '/',
             element: <LandingPage />,
