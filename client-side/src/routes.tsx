@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProfilePage from './pages/ProfilePage';
-import Map from './components/Map';
 import NotFound from './pages/NotFound';
 import JobList from './pages/JobList';
 import SignIn from './pages/SignInPage';
