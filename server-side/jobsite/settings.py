@@ -190,8 +190,8 @@ DJOSER = {
         'user': 'users.serializers.UserSerializer',
     },
     'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'auth/activate/?uid={uid}&token={token}',
-    'PASSWORD_RESET_CONFIRM_URL': 'auth/reset-password/?uid={uid}&token={token}',
+    'ACTIVATION_URL': '#/auth/activate/?uid={uid}&token={token}',
+    'PASSWORD_RESET_CONFIRM_URL': '#/auth/reset-password/?uid={uid}&token={token}',
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True
 }
 
